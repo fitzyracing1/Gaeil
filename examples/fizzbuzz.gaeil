@@ -1,0 +1,11 @@
+i = 1
+fad i <= 20:
+    má i % 3 == 0 agus i % 5 == 0:
+        scríobh("FizzBuzz")
+    eile má i % 3 == 0:
+        scríobh("Fizz")
+    eile má i % 5 == 0:
+        scríobh("Buzz")
+    eile:
+        scríobh(i)
+    i = i + 1

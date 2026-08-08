@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ga">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gaeil — Teanga Ríomhchlárúcháin as Gaeilge</title>
+  <style>
+    :root {
+      --green: #0a5c36;
+      --gold: #c9a227;
+      --bg: #0d1f17;
+      --card: #132a20;
+      --text: #e8f5e9;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    header {
+      background: linear-gradient(135deg, var(--green), #063d24);
+      padding: 3rem 1.5rem;
+      text-align: center;
+      border-bottom: 3px solid var(--gold);
+    }
+    h1 {
+      font-size: 3rem;
+      letter-spacing: 0.05em;
+      color: white;
+    }
+    .subtitle {
+      color: var(--gold);
+      font-size: 1.2rem;
+      margin-top: 0.5rem;
+    }
+    main {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid #1e3d2f;
+    }
+    h2 {
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+      font-size: 1.4rem;
+    }
+    pre, code {
+      background: #0a1812;
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: ui-monospace, monospace;
+      font-size: 0.95rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 0.6rem 0.8rem;
+      text-align: left;
+      border-bottom: 1px solid #1e3d2f;
+    }
+    th { color: var(--gold); }
+    a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: #6b8f7a;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Gaeil</h1>
+    <p class="subtitle">Teanga Ríomhchlárúcháin as Gaeilge</p>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Cad é Gaeil?</h2>
+      <p>
+        Gaeil is a simple programming language that uses Irish (Gaeilge) keywords.
+        It is designed so Irish speakers and learners can write code in their own language.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Eochairfhocail (Keywords)</h2>
+      <table>
+        <tr><th>English</th><th>Gaeil</th></tr>
+        <tr><td>print</td><td><code>scríobh</code></td></tr>
+        <tr><td>if</td><td><code>má</code></td></tr>
+        <tr><td>else</td><td><code>eile</code></td></tr>
+        <tr><td>while</td><td><code>fad</code></td></tr>
+        <tr><td>def</td><td><code>feidhm</code></td></tr>
+        <tr><td>return</td><td><code>fill</code></td></tr>
+        <tr><td>True / False</td><td><code>fíor</code> / <code>bréag</code></td></tr>
+        <tr><td>and / or / not</td><td><code>agus</code> / <code>nó</code> / <code>ní</code></td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Sampla</h2>
+      <pre>scríobh("Dia duit, a dhomhan!")
+
+feidhm factorial(n):
+    má n <= 1:
+        fill 1
+    eile:
+        fill n * factorial(n - 1)
+
+scríobh(factorial(5))</pre>
+    </div>
+
+    <div class="card">
+      <h2>Conas tosú</h2>
+      <p>
+        Clone the repo and run:
+      </p>
+      <pre>python gaeil.py examples/hello.gaeil</pre>
+      <p style="margin-top:1rem">
+        <a href="https://github.com/fitzyracing1/gaeil">→ GitHub Repository</a>
+      </p>
+    </div>
+  </main>
+
+  <footer>
+    Gaeil · fitzyracing1 · MIT License
+  </footer>
+</body>
+</html>

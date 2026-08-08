@@ -1,0 +1,9 @@
+feidhm factorial(n):
+    má n <= 1:
+        fill 1
+    eile:
+        fill n * factorial(n - 1)
+
+uimhir = 5
+scríobh("Toradh factorial(5):")
+scríobh(factorial(uimhir))
