@@ -66,3 +66,8 @@ MIT
 ---
 
 Created with Grok · fitzyracing1
+
+## Documentation
+
+- In-repo docs: [docs/](docs/index.md)
+- Wiki: [https://github.com/fitzyracing1/Gaeil/wiki](https://github.com/fitzyracing1/Gaeil/wiki)
