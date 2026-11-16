@@ -2,145 +2,735 @@
 <html lang="ga">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Gaeil is a programming language written in Irish (Gaeilge). gaeil.py translates Irish keywords into Python and runs the program, on a laptop or in Termux.">
+  <meta property="og:title" content="Gaeil — Teanga Ríomhchlárúcháin as Gaeilge">
+  <meta property="og:description" content="Gaeil is a programming language written in Irish (Gaeilge). gaeil.py translates Irish keywords into Python and runs the program, on a laptop or in Termux.">
+  <meta property="og:url" content="https://fitzyracing1.github.io/Gaeil/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ga">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Gaeil — Teanga Ríomhchlárúcháin as Gaeilge">
+  <meta name="twitter:description" content="Gaeil is a programming language written in Irish (Gaeilge). gaeil.py translates Irish keywords into Python and runs the program, on a laptop or in Termux.">
+  <link rel="canonical" href="https://fitzyracing1.github.io/Gaeil/">
   <title>Gaeil — Teanga Ríomhchlárúcháin as Gaeilge</title>
   <style>
     :root {
-      --green: #0a5c36;
-      --gold: #c9a227;
-      --bg: #0d1f17;
-      --card: #132a20;
-      --text: #e8f5e9;
+      --bg: #07110c;
+      --bg-deep: #040807;
+      --panel: rgba(12, 28, 20, 0.86);
+      --panel-solid: #0e1b14;
+      --line: #274233;
+      --green: #1a7a45;
+      --green-bright: #46d07a;
+      --gold: #d7b34a;
+      --gold-soft: #f0d78a;
+      --cream: #f6f1e6;
+      --muted: #9bb0a0;
+      --ink: #06100b;
+      --danger: #f0b4a0;
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+      --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+      --sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", sans-serif;
+      --mono: ui-monospace, "SF Mono", "Cascadia Code", "Consolas", monospace;
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: system-ui, -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
+      font-family: var(--sans);
+      background:
+        radial-gradient(1200px 700px at 50% -10%, rgba(26, 122, 69, 0.22), transparent 55%),
+        radial-gradient(800px 500px at 100% 20%, rgba(215, 179, 74, 0.08), transparent 45%),
+        radial-gradient(900px 600px at 0% 80%, rgba(26, 122, 69, 0.1), transparent 50%),
+        var(--bg);
+      color: var(--cream);
+      line-height: 1.65;
       min-height: 100vh;
     }
-    header {
-      background: linear-gradient(135deg, var(--green), #063d24);
-      padding: 3rem 1.5rem;
+
+    .skip {
+      position: absolute;
+      left: 1rem;
+      top: -4rem;
+      background: var(--gold);
+      color: var(--ink);
+      padding: 0.6rem 1rem;
+      font-weight: 700;
+      z-index: 20;
+      border-radius: 6px;
+    }
+    .skip:focus { top: 1rem; }
+
+    a { color: var(--gold-soft); text-underline-offset: 0.18em; }
+    a:hover { color: var(--gold); }
+    a:focus-visible, button:focus-visible, .tab:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
+    }
+
+    .wrap { width: min(1120px, calc(100% - 2rem)); margin-inline: auto; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(14px);
+      background: rgba(7, 17, 12, 0.78);
+      border-bottom: 1px solid rgba(215, 179, 74, 0.18);
+    }
+    .site-header .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.85rem 0;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      color: var(--cream);
+      text-decoration: none;
+      font-family: var(--serif);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      font-size: 1.05rem;
+    }
+    .brand svg { width: 34px; height: 34px; }
+    nav ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 1.1rem;
+      list-style: none;
+    }
+    nav a {
+      color: var(--cream);
+      text-decoration: none;
+      font-size: 0.92rem;
+    }
+    nav a:hover { color: var(--gold-soft); }
+
+    .hero {
+      position: relative;
+      padding: 4.5rem 0 3.5rem;
+      overflow: hidden;
       text-align: center;
-      border-bottom: 3px solid var(--gold);
+    }
+    .hero-knot {
+      position: absolute;
+      inset: -8% 50% auto auto;
+      width: min(640px, 92vw);
+      transform: translateX(35%);
+      opacity: 0.28;
+      pointer-events: none;
+    }
+    .hero-knot-left {
+      right: auto;
+      left: 50%;
+      transform: translateX(-135%) scaleX(-1);
+      opacity: 0.16;
+    }
+    .knot-stroke {
+      fill: none;
+      stroke: var(--gold);
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .knot-draw {
+      stroke-dasharray: 900;
+      stroke-dashoffset: 900;
+      animation: draw 4.8s ease forwards, pulse 8s 4.8s ease-in-out infinite;
+    }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.85; }
+      50% { opacity: 1; }
+    }
+
+    .triskele { width: 92px; height: 92px; margin: 0 auto 1.25rem; }
+    .eyebrow {
+      color: var(--gold);
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      font-size: 0.74rem;
+      font-weight: 700;
     }
     h1 {
-      font-size: 3rem;
-      letter-spacing: 0.05em;
-      color: white;
+      font-family: var(--serif);
+      font-size: clamp(4.2rem, 14vw, 8.4rem);
+      line-height: 0.9;
+      letter-spacing: 0.04em;
+      font-weight: 700;
+      margin: 0.35rem 0 0.6rem;
+      background: linear-gradient(180deg, #fff8e6 0%, var(--gold-soft) 45%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 40px rgba(215, 179, 74, 0.08);
     }
     .subtitle {
-      color: var(--gold);
-      font-size: 1.2rem;
-      margin-top: 0.5rem;
+      font-family: var(--serif);
+      font-size: clamp(1.15rem, 2.4vw, 1.55rem);
+      color: var(--gold-soft);
+      font-style: italic;
     }
-    main {
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 0 1.5rem;
+    .lede {
+      max-width: 46rem;
+      margin: 1.25rem auto 0;
+      color: var(--cream);
+      font-size: 1.14rem;
+      line-height: 1.7;
     }
-    .card {
-      background: var(--card);
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      border: 1px solid #1e3d2f;
+    .cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      justify-content: center;
+      margin-top: 1.8rem;
     }
-    h2 {
-      color: var(--gold);
-      margin-bottom: 0.75rem;
-      font-size: 1.4rem;
-    }
-    pre, code {
-      background: #0a1812;
-      border-radius: 8px;
-      padding: 1rem;
-      overflow-x: auto;
-      font-family: ui-monospace, monospace;
-      font-size: 0.95rem;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    th, td {
-      padding: 0.6rem 0.8rem;
-      text-align: left;
-      border-bottom: 1px solid #1e3d2f;
-    }
-    th { color: var(--gold); }
-    a {
-      color: var(--gold);
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      border-radius: 999px;
+      padding: 0.72rem 1.2rem;
       text-decoration: none;
+      font-weight: 650;
+      border: 1px solid transparent;
+      font-size: 0.98rem;
     }
-    a:hover { text-decoration: underline; }
+    .btn-gold {
+      background: linear-gradient(180deg, var(--gold-soft), var(--gold));
+      color: var(--ink);
+    }
+    .btn-gold:hover { color: var(--ink); filter: brightness(1.06); }
+    .btn-ghost {
+      border-color: rgba(215, 179, 74, 0.45);
+      color: var(--gold-soft);
+      background: rgba(215, 179, 74, 0.05);
+    }
+
+    .knot-rule {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin: 0.5rem auto 2.5rem;
+      color: var(--gold);
+    }
+    .knot-rule svg { width: 220px; height: 28px; }
+
+    section { padding: 1.25rem 0 2.75rem; }
+    h2 {
+      font-family: var(--serif);
+      font-size: clamp(1.7rem, 3vw, 2.2rem);
+      color: var(--gold-soft);
+      letter-spacing: 0.02em;
+      margin-bottom: 0.35rem;
+    }
+    .section-intro { color: var(--muted); margin-bottom: 1.3rem; max-width: 40rem; }
+
+    .terminal {
+      background: linear-gradient(180deg, #0a1510, #07110c);
+      border: 1px solid rgba(215, 179, 74, 0.28);
+      border-radius: 16px;
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.04);
+      overflow: hidden;
+    }
+    .term-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.7rem 0.85rem 0;
+      background: #0c1813;
+      border-bottom: 1px solid var(--line);
+    }
+    .dots { display: flex; gap: 0.35rem; padding: 0.2rem 0.25rem 0.7rem; }
+    .dots span {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: #3d5a48;
+    }
+    .dots span:first-child { background: #c9844a; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+    .tab {
+      appearance: none;
+      background: transparent;
+      border: 0;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      padding: 0.55rem 0.8rem 0.7rem;
+      border-radius: 8px 8px 0 0;
+      cursor: pointer;
+    }
+    .tab[aria-selected="true"] {
+      background: #0a1510;
+      color: var(--gold-soft);
+      border: 1px solid var(--line);
+      border-bottom-color: #0a1510;
+    }
+    .term-body {
+      padding: 1.1rem 1.15rem 1.3rem;
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      line-height: 1.55;
+      min-height: 22rem;
+      overflow-x: auto;
+    }
+    .prompt { color: var(--green-bright); }
+    .cmd { color: var(--cream); }
+    .kw { color: var(--gold-soft); font-weight: 700; }
+    .cmt { color: #6f8a78; font-style: italic; }
+    .str { color: #9be7b4; }
+    .term-label {
+      color: var(--gold);
+      margin: 1rem 0 0.35rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .out { color: var(--cream); white-space: pre-wrap; }
+    .cursor {
+      display: inline-block;
+      width: 0.55ch;
+      height: 1.05em;
+      background: var(--gold);
+      vertical-align: text-bottom;
+      margin-left: 1px;
+      animation: blink 1s steps(1) infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+    .visually-hidden {
+      position: absolute;
+      width: 1px; height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+
+    .kw-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 0.7rem;
+    }
+    .kw-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0.85rem 0.95rem 0.75rem;
+    }
+    .kw-card .ga {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      color: var(--cream);
+    }
+    .kw-card .en {
+      color: var(--gold);
+      font-family: var(--mono);
+      font-size: 0.86rem;
+    }
+    .kw-note { margin-top: 1rem; color: var(--muted); font-size: 0.95rem; }
+
+    .start-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr;
+      gap: 1.2rem;
+    }
+    @media (max-width: 800px) {
+      .start-grid { grid-template-columns: 1fr; }
+      nav ul { justify-content: flex-end; }
+      .term-body { min-height: 16rem; font-size: 0.84rem; }
+    }
+
+    .codebox {
+      position: relative;
+      background: var(--panel-solid);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .codebox pre {
+      padding: 1.1rem 1.15rem 1.25rem;
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      color: var(--cream);
+    }
+    .copy {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.6rem;
+      appearance: none;
+      background: rgba(215, 179, 74, 0.12);
+      color: var(--gold-soft);
+      border: 1px solid rgba(215, 179, 74, 0.3);
+      border-radius: 999px;
+      padding: 0.28rem 0.7rem;
+      font: 650 0.78rem var(--sans);
+      cursor: pointer;
+    }
+    .copy[data-copied="true"] { background: var(--green); color: white; border-color: var(--green); }
+    .side-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1.2rem 1.25rem;
+    }
+    .side-card p { color: var(--muted); margin-bottom: 0.9rem; }
+    .side-card ul { margin-left: 1.1rem; color: var(--cream); }
+    .side-card li { margin: 0.35rem 0; }
+
     footer {
-      text-align: center;
-      padding: 2rem;
-      color: #6b8f7a;
-      font-size: 0.9rem;
+      border-top: 1px solid rgba(215, 179, 74, 0.2);
+      padding: 2rem 0 2.6rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    footer .wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.5rem;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    footer nav { display: flex; flex-wrap: wrap; gap: 1rem; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .knot-draw, .cursor { animation: none; }
+      .knot-draw { stroke-dashoffset: 0; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Gaeil</h1>
-    <p class="subtitle">Teanga Ríomhchlárúcháin as Gaeilge</p>
+  <a class="skip" href="#príomh">Téigh go dtí an príomhábhar</a>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="#barr" aria-label="Gaeil, tús an leathanaigh">
+        <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+          <circle cx="32" cy="32" r="29" fill="none" stroke="#d7b34a" stroke-width="1.4"/>
+          <path class="knot-stroke" stroke-width="2.2" d="M32 10c8 0 14 6 14 14 0 10-14 12-14 22 0-10-14-12-14-22 0-8 6-14 14-14zm0 0c-8 0-14 6-14 14 8 0 14-4 22-4 0-8-6-10-8-10zm0 44c8 0 14-6 14-14-8 0-14 4-22 4 0 8 6 10 8 10z"/>
+        </svg>
+        Gaeil
+      </a>
+      <nav aria-label="Príomhloingseoireacht">
+        <ul>
+          <li><a href="#sampla">Sampla</a></li>
+          <li><a href="#eochairfhocail">Eochairfhocail</a></li>
+          <li><a href="#tosu">Tosú</a></li>
+          <li><a href="https://github.com/fitzyracing1/Gaeil">GitHub</a></li>
+        </ul>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <div class="card">
-      <h2>Cad é Gaeil?</h2>
-      <p>
-        Gaeil is a simple programming language that uses Irish (Gaeilge) keywords.
-        It is designed so Irish speakers and learners can write code in their own language.
-      </p>
+  <div id="barr">
+    <section class="hero wrap">
+      <svg class="hero-knot" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+        <path class="knot-stroke knot-draw" d="M200 40c70 0 120 50 120 120 0 40-20 70-50 90 30 20 50 50 50 90 0 70-50 120-120 120s-120-50-120-120c0-40 20-70 50-90-30-20-50-50-50-90C80 90 130 40 200 40zm0 36c-50 0-84 34-84 84 0 28 14 50 36 64-22 14-36 36-36 64 0 50 34 84 84 84s84-34 84-84c0-28-14-50-36-64 22-14 36-36 36-64 0-50-34-84-84-84zm0 48c24 0 40 16 40 36s-16 32-40 48c-24-16-40-28-40-48s16-36 40-36zm0 152c24 16 40 28 40 48s-16 36-40 36-40-16-40-36 16-32 40-48z"/>
+        <circle cx="200" cy="200" r="18" fill="none" stroke="#d7b34a" stroke-width="1.4"/>
+        <circle cx="200" cy="200" r="6" fill="#d7b34a"/>
+      </svg>
+      <svg class="hero-knot hero-knot-left" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+        <path class="knot-stroke" d="M200 40c70 0 120 50 120 120 0 40-20 70-50 90 30 20 50 50 50 90 0 70-50 120-120 120s-120-50-120-120c0-40 20-70 50-90-30-20-50-50-50-90C80 90 130 40 200 40zm0 36c-50 0-84 34-84 84 0 28 14 50 36 64-22 14-36 36-36 64 0 50 34 84 84 84s84-34 84-84c0-28-14-50-36-64 22-14 36-36 36-64 0-50-34-84-84-84z"/>
+      </svg>
+
+      <svg class="triskele" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+        <g fill="none" stroke="#d7b34a" stroke-width="2.1" stroke-linecap="round">
+          <circle cx="50" cy="50" r="46"/>
+          <path d="M50 50 C50 28 68 20 78 32 C88 44 76 58 50 50 C72 50 80 68 68 78 C56 88 42 76 50 50 C50 72 32 80 22 68 C12 56 24 42 50 50 C28 50 20 32 32 22 C44 12 58 24 50 50Z"/>
+        </g>
+      </svg>
+
+      <p class="eyebrow">As Gaeilge</p>
+      <h1>Gaeil</h1>
+      <p class="subtitle">Teanga Ríomhchlárúcháin as Gaeilge</p>
+      <p class="lede" lang="en">Gaeil is a programming language written in Irish (Gaeilge). You write code with Irish keywords such as <code style="font-family:var(--mono);color:var(--gold-soft)">scríobh</code>, <code style="font-family:var(--mono);color:var(--gold-soft)">má</code>, and <code style="font-family:var(--mono);color:var(--gold-soft)">feidhm</code>; <code style="font-family:var(--mono);color:var(--gold-soft)">gaeil.py</code> translates those keywords into Python and runs the program, so it works anywhere Python is available, including a phone in Termux.</p>
+      <div class="cta">
+        <a class="btn btn-gold" href="#tosu">Tosaigh anois</a>
+        <a class="btn btn-ghost" href="https://github.com/fitzyracing1/Gaeil">Féach ar an stór</a>
+        <a class="btn btn-ghost" href="https://fitzyracing1.com">fitzyracing1.com</a>
+      </div>
+    </section>
+  </div>
+
+  <div class="knot-rule" aria-hidden="true">
+    <svg viewBox="0 0 220 28" focusable="false">
+      <path class="knot-stroke" stroke-width="1.3" d="M4 14h60m92 0h60M86 14c8-10 20-10 24 0 4 10 16 10 24 0 4-8 12-8 16 0"/>
+      <circle cx="110" cy="14" r="3.2" fill="#d7b34a"/>
+    </svg>
+  </div>
+
+  <main id="príomh">
+    <section class="wrap" id="sampla">
+      <h2>Sampla beo</h2>
+      <p class="section-intro" lang="en">A terminal-style walkthrough of the real programs in <code>examples/</code>. The keywords, translations, and output match <code>gaeil.py</code> — nothing here is invented syntax.</p>
+
+      <div class="terminal">
+        <div class="term-top">
+          <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
+          <div class="tabs" role="tablist" aria-label="Samplaí Gaeil">
+            <button class="tab" role="tab" id="tab-hello" aria-controls="panel-demo" aria-selected="true" data-example="hello">examples/hello.gaeil</button>
+            <button class="tab" role="tab" id="tab-factorial" aria-controls="panel-demo" aria-selected="false" data-example="factorial">examples/factorial.gaeil</button>
+            <button class="tab" role="tab" id="tab-fizzbuzz" aria-controls="panel-demo" aria-selected="false" data-example="fizzbuzz">examples/fizzbuzz.gaeil</button>
+          </div>
+        </div>
+        <div class="term-body" id="panel-demo" role="tabpanel" aria-live="polite" aria-labelledby="tab-hello">
+          <span class="visually-hidden">Tosóidh an taispeántas cóid anseo.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap" id="eochairfhocail">
+      <h2>Eochairfhocail</h2>
+      <p class="section-intro" lang="en">Every Irish keyword <code>gaeil.py</code> recognises, and the Python token it becomes. This table is Irish → English, taken from the translator’s <code>KEYWORDS</code> map.</p>
+      <div class="kw-grid" id="kw-grid"></div>
+      <p class="kw-note" lang="en">Gaeil is otherwise ordinary Python, so names, numbers, punctuation, and indentation stay as they are.</p>
+    </section>
+
+    <section class="wrap" id="tosu">
+      <h2>Conas tosú</h2>
+      <p class="section-intro" lang="en">Clone the repository and run the hello example. You only need Python 3.</p>
+      <div class="start-grid">
+        <div class="codebox">
+          <button class="copy" type="button" data-copy="git clone https://github.com/fitzyracing1/Gaeil.git
+cd Gaeil
+python gaeil.py examples/hello.gaeil">Cóipeáil</button>
+          <pre><code>git clone https://github.com/fitzyracing1/Gaeil.git
+cd Gaeil
+python gaeil.py examples/hello.gaeil</code></pre>
+        </div>
+        <aside class="side-card">
+          <p lang="en">The same command is the first program in the demo above. <code>python gaeil.py</code> with no file runs a short built-in demo from the translator.</p>
+          <ul>
+            <li><a href="https://github.com/fitzyracing1/Gaeil">github.com/fitzyracing1/Gaeil</a></li>
+            <li><a href="https://fitzyracing1.com">fitzyracing1.com</a></li>
+            <li><a href="https://fitzyracing1.com/termux/">Rith ar Termux</a></li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p>Gaeil · MIT License · Copyright (c) 2026 Joshua Almeida</p>
+      <nav aria-label="Naisc an bhuntáisc">
+        <a href="https://github.com/fitzyracing1/Gaeil">GitHub</a>
+        <a href="https://fitzyracing1.com">fitzyracing1.com</a>
+        <a href="https://github.com/sponsors/fitzyracing1">Sponsors</a>
+      </nav>
     </div>
+  </footer>
 
-    <div class="card">
-      <h2>Eochairfhocail (Keywords)</h2>
-      <table>
-        <tr><th>English</th><th>Gaeil</th></tr>
-        <tr><td>print</td><td><code>scríobh</code></td></tr>
-        <tr><td>if</td><td><code>má</code></td></tr>
-        <tr><td>else</td><td><code>eile</code></td></tr>
-        <tr><td>while</td><td><code>fad</code></td></tr>
-        <tr><td>def</td><td><code>feidhm</code></td></tr>
-        <tr><td>return</td><td><code>fill</code></td></tr>
-        <tr><td>True / False</td><td><code>fíor</code> / <code>bréag</code></td></tr>
-        <tr><td>and / or / not</td><td><code>agus</code> / <code>nó</code> / <code>ní</code></td></tr>
-      </table>
-    </div>
+  <script>
+    const KEYWORDS = [
+      ["scríobh", "print"],
+      ["má", "if"],
+      ["eile", "else"],
+      ["fad", "while"],
+      ["do", "for"],
+      ["feidhm", "def"],
+      ["fill", "return"],
+      ["fíor", "True"],
+      ["bréag", "False"],
+      ["agus", "and"],
+      ["nó", "or"],
+      ["ní", "not"],
+      ["léigh", "input"],
+      ["neamhní", "None"]
+    ];
 
-    <div class="card">
-      <h2>Sampla</h2>
-      <pre>scríobh("Dia duit, a dhomhan!")
-
-feidhm factorial(n):
+    const EXAMPLES = {
+      hello: {
+        file: "examples/hello.gaeil",
+        tab: "tab-hello",
+        source: `# Hello World as Gaeilge
+scríobh("Dia duit, a dhomhan!")
+scríobh("Fáilte go Gaeil — teanga ríomhchlárúcháin as Gaeilge.")`,
+        python: `# Hello World as Gaeilge
+print("Dia duit, a dhomhan!")
+print("Fáilte go Gaeil — teanga ríomhchlárúcháin as Gaeilge.")`,
+        output: `Dia duit, a dhomhan!
+Fáilte go Gaeil — teanga ríomhchlárúcháin as Gaeilge.`
+      },
+      factorial: {
+        file: "examples/factorial.gaeil",
+        tab: "tab-factorial",
+        source: `feidhm factorial(n):
     má n <= 1:
         fill 1
     eile:
         fill n * factorial(n - 1)
 
-scríobh(factorial(5))</pre>
-    </div>
+uimhir = 5
+scríobh("Toradh factorial(5):")
+scríobh(factorial(uimhir))`,
+        python: `def factorial(n):
+    if n <= 1:
+        return 1
+    else:
+        return n * factorial(n - 1)
 
-    <div class="card">
-      <h2>Conas tosú</h2>
-      <p>
-        Clone the repo and run:
-      </p>
-      <pre>python gaeil.py examples/hello.gaeil</pre>
-      <p style="margin-top:1rem">
-        <a href="https://github.com/fitzyracing1/gaeil">→ GitHub Repository</a>
-      </p>
-    </div>
-  </main>
+uimhir = 5
+print("Toradh factorial(5):")
+print(factorial(uimhir))`,
+        output: `Toradh factorial(5):
+120`
+      },
+      fizzbuzz: {
+        file: "examples/fizzbuzz.gaeil",
+        tab: "tab-fizzbuzz",
+        source: `i = 1
+fad i <= 20:
+    má i % 3 == 0 agus i % 5 == 0:
+        scríobh("FizzBuzz")
+    eile má i % 3 == 0:
+        scríobh("Fizz")
+    eile má i % 5 == 0:
+        scríobh("Buzz")
+    eile:
+        scríobh(i)
+    i = i + 1`,
+        python: `i = 1
+while i <= 20:
+    if i % 3 == 0 and i % 5 == 0:
+        print("FizzBuzz")
+    else if i % 3 == 0:
+        print("Fizz")
+    else if i % 5 == 0:
+        print("Buzz")
+    else:
+        print(i)
+    i = i + 1`,
+        output: null
+      }
+    };
 
-  <footer>
-    Gaeil · fitzyracing1 · MIT License
-  </footer>
+    const kwGrid = document.getElementById("kw-grid");
+    KEYWORDS.forEach(([ga, en]) => {
+      const card = document.createElement("div");
+      card.className = "kw-card";
+      card.innerHTML = `<div class="ga"><code>${ga}</code></div><div class="en">${en}</div>`;
+      kwGrid.appendChild(card);
+    });
+
+    const kwPattern = new RegExp(
+      "(?<![\\p{L}\\p{N}_])(" + KEYWORDS.map(([g]) => g.replace(/[.*+?^${}()|[\\]\\]/g, "\\$&")).join("|") + ")(?![\\p{L}\\p{N}_])",
+      "gu"
+    );
+
+    function escapeHtml(s) {
+      return s.replace(/[&<>]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[ch]));
+    }
+
+    function highlightGaeil(src) {
+      return escapeHtml(src)
+        .replace(/(^|\n)(#.*)/g, (m, a, b) => a + '<span class="cmt">' + b + "</span>")
+        .replace(/(&quot;.*?&quot;)/g, '<span class="str">$1</span>')
+        .replace(kwPattern, '<span class="kw">$1</span>');
+    }
+
+    function highlightPython(src) {
+      return escapeHtml(src)
+        .replace(/(^|\n)(#.*)/g, (m, a, b) => a + '<span class="cmt">' + b + "</span>")
+        .replace(/(&quot;.*?&quot;)/g, '<span class="str">$1</span>');
+    }
+
+    const panel = document.getElementById("panel-demo");
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let timer = 0;
+    let runId = 0;
+
+    function clearTimer() {
+      if (timer) window.clearTimeout(timer);
+      timer = 0;
+    }
+
+    function renderFrame(example, sourceLen, showPy, showOut, showCursor) {
+      const cmd = "python gaeil.py " + example.file;
+      let html = '<div><span class="prompt">$</span> <span class="cmd">' + escapeHtml(cmd) + "</span></div>";
+      html += '<pre class="out" style="margin-top:0.85rem">' + highlightGaeil(example.source.slice(0, sourceLen));
+      if (showCursor && sourceLen < example.source.length) html += '<span class="cursor" aria-hidden="true"></span>';
+      html += "</pre>";
+      if (showPy) {
+        html += '<div class="term-label">Gaeil → Python</div>';
+        html += '<pre class="out">' + highlightPython(example.python) + "</pre>";
+      }
+      if (showOut && example.output !== null) {
+        html += '<div class="term-label">Output</div>';
+        html += '<pre class="out">' + escapeHtml(example.output) + "</pre>";
+      }
+      panel.innerHTML = html;
+    }
+
+    function play(name) {
+      const example = EXAMPLES[name];
+      const id = ++runId;
+      clearTimer();
+      document.querySelectorAll(".tab").forEach((tab) => {
+        const on = tab.dataset.example === name;
+        tab.setAttribute("aria-selected", on ? "true" : "false");
+      });
+      panel.setAttribute("aria-labelledby", example.tab);
+
+      if (reduced) {
+        renderFrame(example, example.source.length, true, true, false);
+        return;
+      }
+
+      let i = 0;
+      const step = () => {
+        if (id !== runId) return;
+        renderFrame(example, i, false, false, true);
+        if (i < example.source.length) {
+          i += example.source[i] === "\n" ? 1 : 1;
+          timer = window.setTimeout(step, example.source[i - 1] === "\n" ? 70 : 18);
+        } else {
+          timer = window.setTimeout(() => {
+            if (id !== runId) return;
+            renderFrame(example, example.source.length, true, false, false);
+            timer = window.setTimeout(() => {
+              if (id !== runId) return;
+              renderFrame(example, example.source.length, true, true, false);
+            }, 450);
+          }, 350);
+        }
+      };
+      renderFrame(example, 0, false, false, true);
+      timer = window.setTimeout(step, 250);
+    }
+
+    document.querySelectorAll(".tab").forEach((tab) => {
+      tab.addEventListener("click", () => play(tab.dataset.example));
+    });
+
+    document.querySelectorAll(".copy").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const text = btn.getAttribute("data-copy") || "";
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (err) {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          ta.remove();
+        }
+        btn.dataset.copied = "true";
+        btn.textContent = "Cóipeáilte";
+        window.setTimeout(() => {
+          btn.dataset.copied = "false";
+          btn.textContent = "Cóipeáil";
+        }, 1600);
+      });
+    });
+
+    play("hello");
+  </script>
 </body>
 </html>
