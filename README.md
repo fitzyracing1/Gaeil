@@ -57,7 +57,7 @@ scríobh(factorial(5))
 ## GitHub Pages
 
 A simple demo site is available at:  
-https://fitzyracing1.github.io/gaeil/
+https://fitzyracing1.github.io/Gaeil/
 
 ## License
 
